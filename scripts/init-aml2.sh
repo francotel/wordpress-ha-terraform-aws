@@ -12,8 +12,8 @@ WP_ADMIN="${WP_ADMIN}"
 WP_PASSWORD="${WP_PASSWORD}"
 WP_EMAIL="${WP_EMAIL}"
 AWS_REGION="${AWS_REGION}"
-WP_VERSION="6.1"
-LOCALE="en_GB"
+WP_VERSION="${WP_VERSION}"
+LOCALE="${LOCALE}"
 
 sudo yum update -y
 sudo yum install -y jq
@@ -21,12 +21,12 @@ sudo yum install -y httpd
 sudo service httpd start
 sudo yum install amazon-efs-utils -y
 
-# Mounting Efs 
-sudo mount -t efs -o tls ${EFS_ID}:/  /var/www/html
+# # Mounting Efs 
+# sudo mount -t efs -o tls ${EFS_ID}:/  /var/www/html
 
-# Making Mount Permanent
-echo "${EFS_ID}:/ /var/www/html efs tls,_netdev 0 0" | sudo tee -a /etc/fstab
-sudo chmod go+rw /var/www/html
+# # Making Mount Permanent
+# echo "${EFS_ID}:/ /var/www/html efs tls,_netdev 0 0" | sudo tee -a /etc/fstab
+# sudo chmod go+rw /var/www/html
 
 # Install PHP, and related packages
 sudo yum remove -y php*
@@ -62,5 +62,12 @@ sudo chmod +x /bin/wp
 # #Install w3-total cache plugin 
 # wp plugin install w3-total-cache --activate --allow-root
 
+# Crear el archivo index.html con contenido de bienvenida
+echo "<html><body><h1>Welcome to My Website 3</h1></body></html>" | sudo tee /var/www/html/index.html > /dev/null
+
 # Restart httpd
-sudo service httpd restart
+sudo systemctl stop httpd
+
+sleep 4m
+
+sudo systemctl restart httpd

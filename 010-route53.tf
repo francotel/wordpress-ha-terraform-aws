@@ -15,7 +15,3 @@ module "records" {
     }
   ]
 }
-
-# output "alb" {
-#   value = module.alb
-# }

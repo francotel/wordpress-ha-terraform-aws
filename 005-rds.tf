@@ -59,5 +59,10 @@ module "aurora" {
   #   master_user_password_rotation_schedule_expression = "rate(15 days)"
   backup_retention_period  = "15"
   delete_automated_backups = true
+  cluster_timeouts = {
+    create = "20m"
+    update = "20m"
+    delete = "20m"
+  }
 
 }

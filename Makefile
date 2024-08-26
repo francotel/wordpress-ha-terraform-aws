@@ -29,7 +29,7 @@ tf-init: $(env)
 tf-plan: $(env)
 	terraform fmt --recursive && terraform validate && terraform plan -var-file *.tfvars -out=tfplan
 
-tf-apply: $(env)
+tf-apply: $(env) tf-plan
 	terraform fmt --recursive && terraform validate && terraform apply -auto-approve --input=false tfplan
 
 tf-destroy: $(env)
