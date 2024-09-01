@@ -23,15 +23,15 @@ variable "tf_version" {
   type        = string
 }
 
-# variable "vpcs" {
-#   description = "Map of VPC configurations"
-#   type = map(object({
-#     cidr            = string
-#     azs             = list(string)
-#     private_subnets = list(string)
-#     public_subnets  = list(string)
-#   }))
-# }
+variable "vpcs" {
+  description = "Map of VPC configurations"
+  type = map(object({
+    cidr             = string
+    private_subnets  = list(string)
+    public_subnets   = list(string)
+    database_subnets = list(string)
+  }))
+}
 
 variable "domain" {
   description = "domain website hosted in Route53"

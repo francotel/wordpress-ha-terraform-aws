@@ -9,8 +9,8 @@ module "records" {
       name = "${var.project}-${var.env}"
       type = "A"
       alias = {
-        name    = "dualstack.${module.alb.dns_name}"
-        zone_id = module.alb.zone_id
+        name    = module.cdn.cloudfront_distribution_domain_name
+        zone_id = module.cdn.cloudfront_distribution_hosted_zone_id
       }
     }
   ]

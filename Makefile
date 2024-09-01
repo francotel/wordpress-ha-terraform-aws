@@ -1,39 +1,50 @@
-SHELL := /usr/bin/env bash
+# Exporta todas las variables definidas en el Makefile
 .EXPORT_ALL_VARIABLES:
 
-demo:
-	$(eval AWS_PROFILE   = $(shell echo "orion-aws"))
-	$(eval AWS_REGION    = $(shell echo "us-west-1"))
+# Variables globales
+AWS_PROFILE ?= scc-aws
+AWS_REGION ?= us-west-1
 
-# HOW TO EXECUTE
+# HOW TO EXECUTE:
+# - Ejecutar PLAN: make tf-plan env=dev
+# - Ejecutar APPLY: make tf-apply env=dev
+# - Ejecutar DESTROY: make tf-destroy env=dev
 
-# Executing Terraform PLAN
-#	$ make tf-plan env=<env>
-#       make tf-plan env=dev
+.PHONY: clean tf-init tf-plan tf-apply tf-destroy tf-output
 
-# Executing Terraform APPLY
-#   $ make tf-apply env=<env>
+# Limpia los archivos generados
+clean:
+	rm -rf .terraform tfplan
 
-# Executing Terraform DESTROY
-#	$ make tf-destroy env=<env>
-	
-#####  TERRAFORM  #####
-all-test: clean tf-plan
+# Inicializa Terraform y valida la configuración
+tf-init:
+	terraform init -reconfigure -upgrade
+	terraform validate
 
-.PHONY: clean tf-output tf-init tf-plan tf-apply tf-destroy
-	rm -rf .terraform
+# Ejecuta plan, valida y formatea el código
+tf-plan: tf-init
+	terraform fmt --recursive
+	terraform validate
+	terraform plan -var-file *.tfvars -out=tfplan
 
-tf-init: $(env)
-	terraform init -reconfigure -upgrade && terraform validate 
+# Aplica el plan generado
+tf-apply:
+	terraform fmt --recursive
+	terraform validate
+	terraform apply -auto-approve -input=false tfplan
 
-tf-plan: $(env)
-	terraform fmt --recursive && terraform validate && terraform plan -var-file *.tfvars -out=tfplan
+# Destruye los recursos creados
+tf-destroy:
+	@terraform destroy -var-file *.tfvars -auto-approve
 
-tf-apply: $(env) tf-plan
-	terraform fmt --recursive && terraform validate && terraform apply -auto-approve --input=false tfplan
+# Muestra los outputs de Terraform
+tf-output:
+	@terraform output
 
-tf-destroy: $(env)
-	terraform destroy -var-file *.tfvars
+# Genera un reporte de costos con Infracost
+infracost: tf-plan
+	infracost breakdown --path tfplan
 
-tf-output: $(env)
-	AWS_PROFILE=${AWS_PROFILE} terraform output
+# Genera un reporte de costos con Infracost HTML
+infracost-html: tf-plan
+	infracost breakdown --path . --format html > cost-report.html | open -a "Google Chrome" cost-report.html

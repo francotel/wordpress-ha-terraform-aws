@@ -6,9 +6,10 @@ module "elasticache" {
   source  = "terraform-aws-modules/elasticache/aws"
   version = "1.2.2"
 
-  cluster_id               = "memcached-${var.project}-${var.env}"
-  create_cluster           = true
-  create_replication_group = false
+  cluster_id                 = "memcached-${var.project}-${var.env}"
+  create_cluster             = true
+  create_replication_group   = false
+  transit_encryption_enabled = false
 
   engine          = "memcached"
   engine_version  = "1.6.17"

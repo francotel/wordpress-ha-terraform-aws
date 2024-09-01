@@ -4,12 +4,12 @@ module "networking" {
   version = "5.13.0"
 
   name = "vpc-${var.project}-${var.env}"
-  cidr = "172.16.0.0/16"
+  cidr = var.vpcs["main_vpc"].cidr
   azs  = slice(data.aws_availability_zones.available.names, 0, 2)
 
-  private_subnets  = ["172.16.0.0/24", "172.16.1.0/24"]
-  public_subnets   = ["172.16.2.0/24", "172.16.3.0/24"]
-  database_subnets = ["172.16.4.0/24", "172.16.5.0/24"]
+  private_subnets  = var.vpcs["main_vpc"].private_subnets
+  public_subnets   = var.vpcs["main_vpc"].public_subnets
+  database_subnets = var.vpcs["main_vpc"].database_subnets
 
   enable_nat_gateway   = true
   single_nat_gateway   = true

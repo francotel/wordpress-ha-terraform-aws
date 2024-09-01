@@ -1,3 +1,7 @@
+data "aws_ec2_managed_prefix_list" "cloudfront" {
+  name = "com.amazonaws.global.cloudfront.origin-facing"
+}
+
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "9.11.0"
@@ -6,6 +10,7 @@ module "alb" {
   vpc_id                     = module.networking.vpc_id
   subnets                    = module.networking.public_subnets
   enable_deletion_protection = false
+  internal                   = false
 
   # Security Group
   security_group_ingress_rules = {
@@ -16,12 +21,19 @@ module "alb" {
       description = "HTTP web traffic"
       cidr_ipv4   = "0.0.0.0/0"
     }
-    all_https = {
-      from_port   = 443
-      to_port     = 443
-      ip_protocol = "tcp"
-      description = "HTTPS web traffic"
-      cidr_ipv4   = "0.0.0.0/0"
+    # all_https = {
+    #   from_port   = 443
+    #   to_port     = 443
+    #   ip_protocol = "tcp"
+    #   description = "HTTPS web traffic"
+    #   cidr_ipv4   = "0.0.0.0/0" #"136.62.61.229/32"
+    # }
+    all_https_cdn = {
+      from_port      = 443
+      to_port        = 443
+      ip_protocol    = "tcp"
+      description    = "HTTPS web traffic Prefix list CDN"
+      prefix_list_id = data.aws_ec2_managed_prefix_list.cloudfront.id
     }
   }
   security_group_egress_rules = {

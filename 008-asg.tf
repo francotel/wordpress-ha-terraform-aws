@@ -21,12 +21,12 @@ module "asg" {
   source = "terraform-aws-modules/autoscaling/aws"
 
   name                      = "asg-${var.project}-${var.env}"
-  min_size                  = 0
-  max_size                  = 1
-  desired_capacity          = 1
+  min_size                  = 2
+  max_size                  = 3
+  desired_capacity          = 2
   wait_for_capacity_timeout = 0
   health_check_type         = "ELB"
-  health_check_grace_period = "360"
+  health_check_grace_period = "600"
   vpc_zone_identifier       = module.networking.private_subnets
 
   # Launch template
