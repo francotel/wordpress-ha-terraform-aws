@@ -71,7 +71,9 @@ make tf-destroy env=<env>
 Genera un reporte de costos utilizando Infracost para evaluar el impacto financiero de los cambios.
 
 ```bash
-make infracost-report
+make infracost
+
+make infracost-html
 ```
 
 ## 📝 Notas
