@@ -38,7 +38,7 @@ jobs:
           webhook-type: webhook-trigger
           payload: |
             channel: ${{ secrets.SLACK_CHANNEL }}
-            status: "Terraform Init Result: ${{ steps.init.outcome }}"
+            text: "Terraform Init Result: ${{ steps.init.outcome }}"
 
       # - name: Terraform Validate
       #   id: validate
