@@ -1,0 +1,106 @@
+name: WordPress HA Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-1
+
+      # - name: Set up Terraform
+      #   uses: hashicorp/setup-terraform@v1
+
+      # - name: Terraform Init
+      #   id: init
+      #   run: terraform init -reconfigure -upgrade
+      #   continue-on-error: true
+
+      # - name: Notify Slack on Terraform Init Result
+      #   if: always()
+      #   uses: archive/github-actions-slack@v2.1.0
+      #   with:
+      #     slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     channel: ${{ secrets.SLACK_CHANNEL }}
+      #     text: "Terraform Init Result: ${{ steps.init.outcome }}"
+
+      # - name: Terraform Validate
+      #   id: validate
+      #   run: terraform validate
+      #   continue-on-error: true
+
+      # - name: Notify Slack on Terraform Validate Result
+      #   if: always()
+      #   uses: archive/github-actions-slack@v2.1.0
+      #   with:
+      #     slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     channel: ${{ secrets.SLACK_CHANNEL }}
+      #     text: "Terraform Validate Result: ${{ steps.validate.outcome }}"
+
+      # - name: Terraform Plan
+      #   id: plan
+      #   run: terraform plan -var-file *.tfvars -out=tfplan
+      #   continue-on-error: true
+
+      # - name: Notify Slack on Terraform Plan Result
+      #   if: always()
+      #   uses: archive/github-actions-slack@v2.1.0
+      #   with:
+      #     slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     channel: ${{ secrets.SLACK_CHANNEL }}
+      #     text: "Terraform Plan Result: ${{ steps.plan.outcome }}"
+
+      # - name: Run Checkov
+      #   id: checkov
+      #   uses: bridgecrewio/checkov-action@v12
+      #   with:
+      #     directory: .
+      #     soft_fail: true
+
+      # - name: Notify Slack on Checkov Results
+      #   if: always()
+      #   uses: archive/github-actions-slack@v2.1.0
+      #   with:
+      #     slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     channel: ${{ secrets.SLACK_CHANNEL }}
+      #     text: "Checkov Security Scan Results: ${{ steps.checkov.outputs.result }}"
+
+      # - name: Run Infracost
+      #   id: infracost
+      #   run: infracost breakdown --path tfplan
+      #   continue-on-error: true
+
+      # - name: Notify Slack on Infracost Results
+      #   if: always()
+      #   uses: archive/github-actions-slack@v2.1.0
+      #   with:
+      #     slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     channel: ${{ secrets.SLACK_CHANNEL }}
+      #     text: "Infracost Cost Estimation: ${{ steps.infracost.outputs.result }}"
+
+      # - name: Terraform Apply
+      #   id: apply
+      #   run: terraform apply -auto-approve -input=false tfplan
+      #   continue-on-error: true
+
+      # - name: Notify Slack on Terraform Apply Result
+      #   if: always()
+      #   uses: archive/github-actions-slack@v2.1.0
+      #   with:
+      #     slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     channel: ${{ secrets.SLACK_CHANNEL }}
+      #     text: "Terraform Apply Result: ${{ steps.apply.outcome }}"

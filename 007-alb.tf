@@ -82,4 +82,5 @@ module "alb" {
     }
   }
 
+  depends_on = [module.acm.acm_certificate_arn]
 }

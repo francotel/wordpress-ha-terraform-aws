@@ -3,7 +3,7 @@
 
 # Variables globales
 AWS_PROFILE ?= scc-aws
-AWS_REGION ?= us-west-1
+AWS_REGION ?= us-east-1
 
 # HOW TO EXECUTE:
 # - Ejecutar PLAN: make tf-plan env=dev
