@@ -126,11 +126,6 @@ jobs:
         run: terraform init -reconfigure -upgrade
         continue-on-error: true
 
-      - name: Terraform Init
-        id: init
-        run: terraform init -reconfigure -upgrade
-        continue-on-error: true
-
       - name: Terraform Plan
         id: plan
         run: terraform plan -var-file *.tfvars -out=tfplan
@@ -198,7 +193,7 @@ jobs:
         id: plan
         run: terraform plan -var-file *.tfvars -out=tfplan
         continue-on-error: true
-        
+
       - name: Terraform Apply
         id: apply
         run: terraform apply -auto-approve -input=false tfplan
