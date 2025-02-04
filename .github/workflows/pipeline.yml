@@ -142,15 +142,15 @@ jobs:
           framework: terraform
           soft_fail: true
 
-      - name: Setup Infracost
-        uses: infracost/actions/setup@v3
-        with:
-          api-key: ${{ secrets.INFRACOST_API_KEY }}
-
       - name: Run Infracost
         id: infracost
         run: ls -la
         continue-on-error: true
+        
+      - name: Setup Infracost
+        uses: infracost/actions/setup@v3
+        with:
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
 
       - name: Run Infracost
         id: infracost
