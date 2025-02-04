@@ -40,10 +40,10 @@ jobs:
             channel: ${{ secrets.SLACK_CHANNEL }}
             text: "Terraform Init Result: ${{ steps.init.outcome }}"
 
-      # - name: Terraform Validate
-      #   id: validate
-      #   run: terraform validate
-      #   continue-on-error: true
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+        continue-on-error: true
 
       # - name: Notify Slack on Terraform Validate Result
       #   if: always()
