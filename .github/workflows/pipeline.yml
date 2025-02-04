@@ -143,10 +143,10 @@ jobs:
           soft_fail: true
 
       - name: Run Infracost
-        id: infracost
+        id: ls
         run: ls -la
         continue-on-error: true
-        
+
       - name: Setup Infracost
         uses: infracost/actions/setup@v3
         with:
