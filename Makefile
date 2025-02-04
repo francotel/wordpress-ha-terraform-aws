@@ -41,6 +41,9 @@ tf-destroy:
 tf-output:
 	@terraform output
 
+tf-remove:
+	terraform state rm module.alb.aws_lb_listener.this
+	
 # Genera un reporte de costos con Infracost
 infracost: tf-plan
 	infracost breakdown --path tfplan
