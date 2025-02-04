@@ -78,15 +78,15 @@ jobs:
           framework: terraform 
           soft_fail: true
 
-      - name: Notify Slack on Checkov Results
-        if: always()
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: webhook-trigger
-          payload: |
-            channel: ${{ secrets.SLACK_CHANNEL }}
-            text: "Checkov Security Scan Results: ${{ steps.checkov.outputs.result }}"
+      # - name: Notify Slack on Checkov Results
+      #   if: always()
+      #   uses: slackapi/slack-github-action@v2.0.0
+      #   with:
+      #     webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     webhook-type: webhook-trigger
+      #     payload: |
+      #       channel: ${{ secrets.SLACK_CHANNEL }}
+      #       text: "Checkov Security Scan Results: ${{ steps.checkov.outputs.result }}"
 
       - name: Setup Infracost
         uses: infracost/actions/setup@v3
@@ -98,13 +98,15 @@ jobs:
         run: infracost breakdown --path tfplan
         continue-on-error: true
 
-      # - name: Notify Slack on Infracost Results
-      #   if: always()
-      #   uses: archive/github-actions-slack@v2.1.0
-      #   with:
-      #     slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #     channel: ${{ secrets.SLACK_CHANNEL }}
-      #     text: "Infracost Cost Estimation: ${{ steps.infracost.outputs.result }}"
+      - name: Notify Slack on Infracost Results
+        if: always()
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: webhook-trigger
+          payload: |
+            channel: ${{ secrets.SLACK_CHANNEL }}
+            text: "Infracost Cost Estimation: ${{ steps.infracost.outputs.result }}"
 
       # - name: Terraform Apply
       #   id: apply
