@@ -8,8 +8,8 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "across-account-terraform-state-backend " 
-    key    = "demo-wp"
+    bucket = "francotel-demo-terraform-backend-us-east-1" 
+    key    = "demo/demo-wp"
     region = "us-east-1"
   }
 }
