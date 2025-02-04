@@ -121,6 +121,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
       - name: Terraform Init
         id: init
         run: terraform init -reconfigure -upgrade
@@ -151,7 +154,7 @@ jobs:
 
   terraform-apply:
     runs-on: ubuntu-latest
-    steps:
+    needs: security-and-costs
       - name: Checkout code
         uses: actions/checkout@v2
 
