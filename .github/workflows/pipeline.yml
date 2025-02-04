@@ -90,7 +90,7 @@ jobs:
 
       - name: Post Infracost comment
         run: |
-            infracost comment github --path=/tmp/infracost.json \
+            infracost comment github --path=tfplan \
                                      --repo=$GITHUB_REPOSITORY \
                                      --commit "infracost" \
                                      --github-token=${{ github.token }} \
