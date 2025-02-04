@@ -78,6 +78,7 @@ module "cdn" {
     minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method       = "sni-only"
   }
-  depends_on = [module.acm.CloudFront]
+
+  depends_on = [module.acm.acm_cloudfront]
 
 }
