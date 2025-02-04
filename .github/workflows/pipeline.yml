@@ -60,13 +60,15 @@ jobs:
         run: terraform plan -var-file *.tfvars -out=tfplan
         continue-on-error: true
 
-      # - name: Notify Slack on Terraform Plan Result
-      #   if: always()
-      #   uses: archive/github-actions-slack@v2.1.0
-      #   with:
-      #     slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #     channel: ${{ secrets.SLACK_CHANNEL }}
-      #     text: "Terraform Plan Result: ${{ steps.plan.outcome }}"
+      - name: Notify Slack on Terraform Plan Result
+        if: always()
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: webhook-trigger
+          payload: |
+            channel: ${{ secrets.SLACK_CHANNEL }}
+            text: "Terraform Plan Result: ${{ steps.plan.outcome }}"
 
       # - name: Run Checkov
       #   id: checkov
