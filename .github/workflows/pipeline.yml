@@ -70,12 +70,12 @@ jobs:
             channel: ${{ secrets.SLACK_CHANNEL }}
             text: "Terraform Plan Result: ${{ steps.plan.outcome }}"
 
-      # - name: Run Checkov
-      #   id: checkov
-      #   uses: bridgecrewio/checkov-action@v12
-      #   with:
-      #     directory: .
-      #     soft_fail: true
+      - name: Run Checkov
+        id: checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          soft_fail: true
 
       # - name: Notify Slack on Checkov Results
       #   if: always()
