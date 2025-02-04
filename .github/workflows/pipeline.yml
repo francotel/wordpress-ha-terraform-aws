@@ -88,10 +88,15 @@ jobs:
             channel: ${{ secrets.SLACK_CHANNEL }}
             text: "Checkov Security Scan Results: ${{ steps.checkov.outputs.result }}"
 
-      # - name: Run Infracost
-      #   id: infracost
-      #   run: infracost breakdown --path tfplan
-      #   continue-on-error: true
+      - name: Setup Infracost
+        uses: infracost/actions/setup@v3
+        with:
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
+
+      - name: Run Infracost
+        id: infracost
+        run: infracost breakdown --path tfplan
+        continue-on-error: true
 
       # - name: Notify Slack on Infracost Results
       #   if: always()
