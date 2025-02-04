@@ -98,15 +98,22 @@ jobs:
         run: infracost breakdown --path tfplan
         continue-on-error: true
 
-      - name: Notify Slack on Infracost Results
-        if: always()
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: webhook-trigger
-          payload: |
-            channel: ${{ secrets.SLACK_CHANNEL }}
-            text: "Infracost Cost Estimation: ${{ steps.infracost.outputs.result }}"
+      - name: Post Infracost comment
+        run: |
+            infracost comment github --path=/tmp/infracost.json \
+                                     --repo=$GITHUB_REPOSITORY \
+                                     --github-token=${{ github.token }} \
+                                     --pull-request=${{ github.event.pull_request.number }} \
+                                     --behavior=update
+      # - name: Notify Slack on Infracost Results
+      #   if: always()
+      #   uses: slackapi/slack-github-action@v2.0.0
+      #   with:
+      #     webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     webhook-type: webhook-trigger
+      #     payload: |
+      #       channel: ${{ secrets.SLACK_CHANNEL }}
+      #       text: "Infracost Cost Estimation: ${{ steps.infracost.outputs.result }}"
 
       # - name: Terraform Apply
       #   id: apply
@@ -115,8 +122,10 @@ jobs:
 
       # - name: Notify Slack on Terraform Apply Result
       #   if: always()
-      #   uses: archive/github-actions-slack@v2.1.0
+      #   uses: slackapi/slack-github-action@v2.0.0
       #   with:
-      #     slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #     channel: ${{ secrets.SLACK_CHANNEL }}
-      #     text: "Terraform Apply Result: ${{ steps.apply.outcome }}"
+      #     webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     webhook-type: webhook-trigger
+      #     payload: |
+      #       channel: ${{ secrets.SLACK_CHANNEL }}
+      #       text: "Terraform Apply Result: ${{ steps.apply.outcome }}"
