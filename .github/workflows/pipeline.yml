@@ -1,207 +1,207 @@
-name: WordPress HA Deployment Pipeline
+# name: WordPress HA Deployment Pipeline
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
 
-jobs:
-  terraform-init:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+# jobs:
+#   terraform-init:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-west-1
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
+#       - name: Set up Terraform
+#         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init
-        id: init
-        run: terraform init -reconfigure -upgrade
-        continue-on-error: true
+#       - name: Terraform Init
+#         id: init
+#         run: terraform init -reconfigure -upgrade
+#         continue-on-error: true
 
-      - name: Notify Slack on Terraform Init Result
-        if: always()
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: webhook-trigger
-          payload: |
-            channel: ${{ secrets.SLACK_CHANNEL }}
-            text: "Terraform Init Result: ${{ steps.init.outcome }}"
+#       - name: Notify Slack on Terraform Init Result
+#         if: always()
+#         uses: slackapi/slack-github-action@v2.0.0
+#         with:
+#           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+#           webhook-type: webhook-trigger
+#           payload: |
+#             channel: ${{ secrets.SLACK_CHANNEL }}
+#             text: "Terraform Init Result: ${{ steps.init.outcome }}"
 
-  terraform-validate:
-    runs-on: ubuntu-latest
-    needs: terraform-init
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#   terraform-validate:
+#     runs-on: ubuntu-latest
+#     needs: terraform-init
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-west-1
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
+#       - name: Set up Terraform
+#         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init
-        id: init
-        run: terraform init -reconfigure -upgrade
-        continue-on-error: true
+#       - name: Terraform Init
+#         id: init
+#         run: terraform init -reconfigure -upgrade
+#         continue-on-error: true
 
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate
-        continue-on-error: true
+#       - name: Terraform Validate
+#         id: validate
+#         run: terraform validate
+#         continue-on-error: true
 
-      - name: Notify Slack on Terraform Validate Result
-        if: always()
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: webhook-trigger
-          payload: |
-            channel: ${{ secrets.SLACK_CHANNEL }}
-            text: "Terraform Validate Result: ${{ steps.validate.outcome }}"
+#       - name: Notify Slack on Terraform Validate Result
+#         if: always()
+#         uses: slackapi/slack-github-action@v2.0.0
+#         with:
+#           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+#           webhook-type: webhook-trigger
+#           payload: |
+#             channel: ${{ secrets.SLACK_CHANNEL }}
+#             text: "Terraform Validate Result: ${{ steps.validate.outcome }}"
 
-  terraform-plan:
-    runs-on: ubuntu-latest
-    needs: terraform-validate
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#   terraform-plan:
+#     runs-on: ubuntu-latest
+#     needs: terraform-validate
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-west-1
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
+#       - name: Set up Terraform
+#         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init
-        id: init
-        run: terraform init -reconfigure -upgrade
-        continue-on-error: true
+#       - name: Terraform Init
+#         id: init
+#         run: terraform init -reconfigure -upgrade
+#         continue-on-error: true
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -var-file *.tfvars -out=tfplan
-        continue-on-error: true
+#       - name: Terraform Plan
+#         id: plan
+#         run: terraform plan -var-file *.tfvars -out=tfplan
+#         continue-on-error: true
 
-      - name: Notify Slack on Terraform Plan Result
-        if: always()
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: webhook-trigger
-          payload: |
-            channel: ${{ secrets.SLACK_CHANNEL }}
-            text: "Terraform Plan Result: ${{ steps.plan.outcome }}"
+#       - name: Notify Slack on Terraform Plan Result
+#         if: always()
+#         uses: slackapi/slack-github-action@v2.0.0
+#         with:
+#           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+#           webhook-type: webhook-trigger
+#           payload: |
+#             channel: ${{ secrets.SLACK_CHANNEL }}
+#             text: "Terraform Plan Result: ${{ steps.plan.outcome }}"
 
-  security-and-costs:
-    runs-on: ubuntu-latest
-    needs: terraform-plan
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#   security-and-costs:
+#     runs-on: ubuntu-latest
+#     needs: terraform-plan
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-west-1
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
+#       - name: Set up Terraform
+#         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init
-        id: init
-        run: terraform init -reconfigure -upgrade
-        continue-on-error: true
+#       - name: Terraform Init
+#         id: init
+#         run: terraform init -reconfigure -upgrade
+#         continue-on-error: true
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -var-file *.tfvars -out=tfplan
-        continue-on-error: true
+#       - name: Terraform Plan
+#         id: plan
+#         run: terraform plan -var-file *.tfvars -out=tfplan
+#         continue-on-error: true
 
-      - name: Run Checkov
-        id: checkov
-        uses: bridgecrewio/checkov-action@master
-        with:
-          directory: .
-          framework: terraform
-          soft_fail: true
+#       - name: Run Checkov
+#         id: checkov
+#         uses: bridgecrewio/checkov-action@master
+#         with:
+#           directory: .
+#           framework: terraform
+#           soft_fail: true
 
-      - name: Run Infracost
-        id: ls
-        run: ls -la
-        continue-on-error: true
+#       - name: Run Infracost
+#         id: ls
+#         run: ls -la
+#         continue-on-error: true
 
-      - name: Setup Infracost
-        uses: infracost/actions/setup@v3
-        with:
-          api-key: ${{ secrets.INFRACOST_API_KEY }}
+#       - name: Setup Infracost
+#         uses: infracost/actions/setup@v3
+#         with:
+#           api-key: ${{ secrets.INFRACOST_API_KEY }}
 
-      - name: Run Infracost
-        id: infracost
-        run: infracost breakdown --path tfplan
-        continue-on-error: true
+#       - name: Run Infracost
+#         id: infracost
+#         run: infracost breakdown --path tfplan
+#         continue-on-error: true
 
-  terraform-apply:
-    runs-on: ubuntu-latest
-    needs: security-and-costs
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#   terraform-apply:
+#     runs-on: ubuntu-latest
+#     needs: security-and-costs
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-west-1
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
+#       - name: Set up Terraform
+#         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init
-        id: init
-        run: terraform init -reconfigure -upgrade
-        continue-on-error: true
+#       - name: Terraform Init
+#         id: init
+#         run: terraform init -reconfigure -upgrade
+#         continue-on-error: true
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -var-file *.tfvars -out=tfplan
-        continue-on-error: true
+#       - name: Terraform Plan
+#         id: plan
+#         run: terraform plan -var-file *.tfvars -out=tfplan
+#         continue-on-error: true
 
-      - name: Terraform Apply
-        id: apply
-        run: terraform apply -auto-approve -input=false tfplan
-        continue-on-error: true
+#       - name: Terraform Apply
+#         id: apply
+#         run: terraform apply -auto-approve -input=false tfplan
+#         continue-on-error: true
 
-      - name: Notify Slack on Terraform Apply Result
-        if: always()
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: webhook-trigger
-          payload: |
-            channel: ${{ secrets.SLACK_CHANNEL }}
-            text: "Terraform Apply Result: ${{ steps.apply.outcome }}"
+#       - name: Notify Slack on Terraform Apply Result
+#         if: always()
+#         uses: slackapi/slack-github-action@v2.0.0
+#         with:
+#           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+#           webhook-type: webhook-trigger
+#           payload: |
+#             channel: ${{ secrets.SLACK_CHANNEL }}
+#             text: "Terraform Apply Result: ${{ steps.apply.outcome }}"
