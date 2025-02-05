@@ -1,16 +1,16 @@
 # Exporta todas las variables definidas en el Makefile
 .EXPORT_ALL_VARIABLES:
 
-# Variables globales
-AWS_PROFILE ?= scc-aws
-AWS_REGION ?= us-east-1
+# Variables globales (Debe ser actualizado según su entorno)
+AWS_PROFILE ?= <SU_PERFIL_AWS>  # Reemplazar con el perfil correcto
+AWS_REGION ?= <SU_REGION_AWS>   # Reemplazar con la región correcta (ejemplo: us-east-1)
 
 # HOW TO EXECUTE:
 # - Ejecutar PLAN: make tf-plan env=dev
 # - Ejecutar APPLY: make tf-apply env=dev
 # - Ejecutar DESTROY: make tf-destroy env=dev
 
-.PHONY: clean tf-init tf-plan tf-apply tf-destroy tf-output
+.PHONY: clean tf-init tf-plan tf-apply tf-destroy tf-output infracost infracost-html
 
 # Limpia los archivos generados
 clean:
@@ -25,7 +25,7 @@ tf-init:
 tf-plan: tf-init
 	terraform fmt --recursive
 	terraform validate
-	terraform plan -var-file *.tfvars -out=tfplan
+	terraform plan -var-file=*.tfvars -out=tfplan
 
 # Aplica el plan generado
 tf-apply:
@@ -35,19 +35,16 @@ tf-apply:
 
 # Destruye los recursos creados
 tf-destroy:
-	@terraform destroy -var-file *.tfvars -auto-approve
+	terraform destroy -var-file=*.tfvars -auto-approve
 
 # Muestra los outputs de Terraform
 tf-output:
-	@terraform output
+	terraform output
 
-tf-remove:
-	terraform state rm module.alb.aws_lb_listener.this
-	
 # Genera un reporte de costos con Infracost
 infracost: tf-plan
-	infracost breakdown --path tfplan
+	infracost breakdown --path=tfplan
 
 # Genera un reporte de costos con Infracost HTML
 infracost-html: tf-plan
-	infracost breakdown --path . --format html > cost-report.html | open -a "Google Chrome" cost-report.html
+	infracost breakdown --path=. --format html > cost-report.html | open -a "Google Chrome" cost-report.html
