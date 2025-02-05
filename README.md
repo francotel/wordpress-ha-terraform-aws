@@ -39,42 +39,62 @@ cd wordpress-ha-terraform-aws
 
 ## ⚙️ Uso
 
-### Inicializar el entorno
-Inicializa Terraform para configurar los plugins necesarios.
+# Terraform Makefile - Caso de Uso
 
-```bash
-make tf-init env=<env>
+Este Makefile facilita la administración de infraestructura con Terraform mediante comandos simples y reutilizables.
+
+## Configuración
+
+Antes de ejecutar los comandos, asegúrate de actualizar las siguientes variables en el Makefile:
+
+- `AWS_PROFILE`: Nombre del perfil de AWS a utilizar.
+- `AWS_REGION`: Región en la que se desplegarán los recursos.
+
+Ejemplo:
+
+```makefile
+AWS_PROFILE ?= mi-perfil-aws
+AWS_REGION ?= us-east-1
 ```
 
-### Planificar la infraestructura
-Crea un plan de ejecución que muestra los cambios que se aplicarán.
+## Comandos Disponibles
 
-```bash
-make tf-plan env=<env>
+### Inicialización y validación:
+```sh
+make tf-init
 ```
 
-### Aplicar cambios
-Aplica los cambios planificados en la infraestructura.
-
-```bash
-make tf-apply env=<env>
+### Planificación:
+```sh
+make tf-plan
 ```
 
-### Destruir infraestructura
-Elimina todos los recursos creados.
-
-```bash
-make tf-destroy env=<env>
+### Aplicación del plan:
+```sh
+make tf-apply
 ```
 
-### Generar reporte de costos
-Genera un reporte de costos utilizando Infracost para evaluar el impacto financiero de los cambios.
+### Destrucción de recursos:
+```sh
+make tf-destroy
+```
 
-```bash
+### Visualización de salidas:
+```sh
+make tf-output
+```
+
+### Estimación de costos con Infracost:
+```sh
 make infracost
+```
 
+### Generación de reporte HTML de costos:
+```sh
 make infracost-html
 ```
+
+Este Makefile optimiza el flujo de trabajo de Terraform, asegurando consistencia en cada ejecución.
 
 ## 📝 Notas
 Asegúrate de definir correctamente los perfiles de AWS y ajustar las variables de Terraform según tu entorno.
