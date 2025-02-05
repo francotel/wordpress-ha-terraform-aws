@@ -12,7 +12,7 @@ Este repositorio contiene un flujo de trabajo básico para desplegar un entorno 
 
 A continuación, se muestra un diagrama de la arquitectura del despliegue:
 
-![Arquitectura](images/wordpress-aws.drawio.png)
+![Arquitectura](images/wordpress-ha-aws.png)
 
 ## 📋 Requisitos
 
