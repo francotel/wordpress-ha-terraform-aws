@@ -84,8 +84,9 @@ El despliegue se ha probado en la región us-west-1, pero se puede adaptar a otr
 
 Si encuentras útil este repositorio y quieres ver más contenido similar, ¡sígueme en LinkedIn para estar al tanto de más proyectos y recursos!
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Franco%20Navarro-blue)](https://www.linkedin.com/in/franconavarro/)
+[![LinkedIn](https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Logo.svg.original.svg)](https://www.linkedin.com/in/franconavarro/)
+
 
 Si deseas apoyar mi trabajo, puedes invitarme a un café. ¡Gracias por tu apoyo!
 
-[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Apóyame-FFDD00?style=flat&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/francotel)
+[![BuyMeACoffee](https://github.com/francotel/wordpress-ha-terraform-aws/blob/main/images/buymeacoffee.png)](https://www.buymeacoffee.com/francotel)
